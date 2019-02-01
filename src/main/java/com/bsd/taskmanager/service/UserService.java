@@ -7,11 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bsd.taskmanager.entity.Tasks;
 import com.bsd.taskmanager.entity.Users;
-import com.bsd.taskmanager.model.TaskDto;
 import com.bsd.taskmanager.model.UserDto;
-import com.bsd.taskmanager.repository.TaskRepository;
 import com.bsd.taskmanager.repository.UserRepository;
 
 @Service
@@ -19,9 +16,6 @@ public class UserService implements User {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
-	private TaskRepository taskRepository;
 	
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -45,13 +39,7 @@ public class UserService implements User {
 		List<UserDto> userDto = new ArrayList<>();
 		
 		for (Users user : users) {
-			userDto.add(UserDto
-						.builder()
-							.id(user.getId())
-							.username(user.getUsername())
-							.firstName(user.getFirstName())
-							.lastName(user.getLastName())
-						.build());
+			userDto.add(buildUser(user));
 		}
 		
 		return userDto;
@@ -65,13 +53,7 @@ public class UserService implements User {
 		
 		if (optional.isPresent()) {
 			Users user = optional.get();
-			userDto = UserDto
-						.builder()
-							.id(user.getId())
-							.username(user.getUsername())
-							.firstName(user.getFirstName())
-							.lastName(user.getLastName())
-						.build();
+			userDto = buildUser(user);
 		}
 		
 		return userDto;
@@ -94,54 +76,13 @@ public class UserService implements User {
 		return true;
 	}
 	
-	@Override
-	public boolean createTask(Long userId, TaskDto taskDto) {
-		
-		Optional<Users> optional = userRepository.findById(userId);
-		
-		if (optional.isPresent()) {
-			Users user = optional.get();
-			
-			taskRepository.save(Tasks
+	private UserDto buildUser(Users user) {
+		return UserDto
 					.builder()
-						.name(taskDto.getName())
-						.description(taskDto.getDescription())
-						.dateTime(taskDto.getDateTime())
-						.user(user)
-					.build());
-		}
-		
-		return true;
+						.id(user.getId())
+						.username(user.getUsername())
+						.firstName(user.getFirstName())
+						.lastName(user.getLastName())
+					.build();
 	}
-
-	@Override
-	public List<TaskDto> getUserTasks(Long userId) {
-		Optional<Users> optional = userRepository.findById(userId);
-		List<TaskDto> tasks = new ArrayList<>();
-
-		if (optional.isPresent()) {
-			Users user = optional.get();
-			
-			for (Tasks task : user.getTasks()) {
-				tasks.add(TaskDto
-							.builder()
-								.id(task.getId())
-								.name(task.getName())
-								.description(task.getDescription())
-								.dateTime(task.getDateTime())
-							.build());
-			}
-		}
-		
-		return tasks;
-	}
-
-	@Override
-	public boolean deleteTask(Long taskId) {
-		if (taskRepository.findById(taskId).isPresent()) {
-			taskRepository.deleteById(taskId);
-		}
-		return true;
-	}
-	
 }
