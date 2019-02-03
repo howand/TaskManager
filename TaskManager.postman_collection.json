@@ -70,6 +70,40 @@
 			"response": []
 		},
 		{
+			"name": "Update_Task",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"My updated task\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/1/task/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"1",
+						"task",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "update_user",
 			"request": {
 				"method": "PUT",
@@ -122,7 +156,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user?=application/json&Accept=application/json",
+					"raw": "http://localhost:8080/api/user",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -131,16 +165,6 @@
 					"path": [
 						"api",
 						"user"
-					],
-					"query": [
-						{
-							"key": "",
-							"value": "application/json"
-						},
-						{
-							"key": "Accept",
-							"value": "application/json"
-						}
 					]
 				}
 			},
@@ -178,6 +202,44 @@
 						"user",
 						"1",
 						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_user_task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/1/task/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"1",
+						"task",
+						"2"
 					]
 				}
 			},
