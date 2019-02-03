@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bsd.taskmanager.entity.Users;
 import com.bsd.taskmanager.model.UserDto;
 import com.bsd.taskmanager.repository.UserRepository;
+import com.bsd.taskmanager.service.exception.UserNotFoundException;
 
 @Service
 public class UserService implements User {
@@ -19,6 +20,10 @@ public class UserService implements User {
 	
 	@Override
 	public UserDto createUser(UserDto user) {
+		List<ValidationRule<UserDto>> createUserRules = UserValidationFactory.getCreateUserRules();
+
+		validate(user, createUserRules);
+		
 		Users users = Users
 						.builder()
 							.username(user.getUsername())
@@ -27,10 +32,14 @@ public class UserService implements User {
 						.build();
 		
 		users = userRepository.save(users);
-		
-		user.setId(users.getId());
-		
-		return user;
+
+		return UserDto
+					.builder()
+						.username(users.getUsername())
+						.firstName(users.getFirstName())
+						.lastName(users.getLastName())
+						.id(users.getId())
+					.build();
 	}
 
 	@Override
@@ -54,26 +63,30 @@ public class UserService implements User {
 		if (optional.isPresent()) {
 			Users user = optional.get();
 			userDto = buildUser(user);
+		} else {
+			throw new UserNotFoundException(id);
 		}
 		
 		return userDto;
 	}
 
 	@Override
-	public boolean updateUser(Long id, String firstName, String lastName) {
+	public void updateUser(Long id, UserDto user) {
+		List<ValidationRule<UserDto>> createUserRules = UserValidationFactory.getUpdateUserRules();
+
+		validate(user, createUserRules);
+		
 		UserDto userDto = getUser(id);
 		
-		Users user = Users
+		Users userEntity = Users
 						.builder()
 							.id(id)
 							.username(userDto.getUsername())
-							.firstName(firstName)
-							.lastName(lastName)
+							.firstName(user.getFirstName())
+							.lastName(user.getLastName())
 						.build();
 		
-		userRepository.save(user);
-		
-		return true;
+		userRepository.save(userEntity);
 	}
 	
 	private UserDto buildUser(Users user) {
@@ -84,5 +97,11 @@ public class UserService implements User {
 						.firstName(user.getFirstName())
 						.lastName(user.getLastName())
 					.build();
+	}
+	
+	private void validate(UserDto user, List<ValidationRule<UserDto>> createUserRules) {
+		for (ValidationRule<UserDto> rule : createUserRules) {
+			rule.validate(user);
+		}
 	}
 }

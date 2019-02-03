@@ -12,5 +12,5 @@ public interface User {
 	
 	UserDto getUser(Long id);
 	
-	boolean updateUser(Long id, String firstName, String lastName);
+	void updateUser(Long id, UserDto user);
 }

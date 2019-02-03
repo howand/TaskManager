@@ -2,7 +2,6 @@ package com.bsd.taskmanager.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +9,9 @@ import org.springframework.stereotype.Service;
 import com.bsd.taskmanager.entity.Tasks;
 import com.bsd.taskmanager.entity.Users;
 import com.bsd.taskmanager.model.TaskDto;
+import com.bsd.taskmanager.model.UserDto;
 import com.bsd.taskmanager.repository.TaskRepository;
-import com.bsd.taskmanager.repository.UserRepository;
+import com.bsd.taskmanager.service.exception.TaskNotFoundException;
 
 @Service
 public class TaskService implements Task {
@@ -20,23 +20,28 @@ public class TaskService implements Task {
 	private TaskRepository taskRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Override
 	public boolean createTask(Long userId, TaskDto taskDto) {
-		Optional<Users> optional = userRepository.findById(userId);
+		UserDto user = userService.getUser(userId);
 		
-		if (optional.isPresent()) {
-			Users user = optional.get();
+		List<ValidationRule<TaskDto>> createTaskRules = TaskValidationFactory.getCreateTaskRules();
+		
+		validate(taskDto, createTaskRules);
 			
-			taskRepository.save(Tasks
-					.builder()
-						.name(taskDto.getName())
-						.description(taskDto.getDescription())
-						.dateTime(taskDto.getDateTime())
-						.user(user)
-					.build());
-		}
+		taskRepository.save(Tasks
+				.builder()
+					.name(taskDto.getName())
+					.description(taskDto.getDescription())
+					.dateTime(taskDto.getDateTime())
+					.user(Users
+							.builder()
+								.id(user.getId())
+								.firstName(user.getFirstName())
+								.lastName(user.getLastName())
+							.build())
+				.build());
 		
 		return true;
 	}
@@ -64,18 +69,17 @@ public class TaskService implements Task {
 	}
 
 	@Override
-	public boolean deleteTask(Long userId, Long taskId) {
-		if (taskRepository.findById(taskId).isPresent()) {
-			taskRepository.deleteByIdAndUserId(taskId, userId);
-		}
-		
-		return true;
+	public void deleteTask(Long userId, Long taskId) {
+		taskRepository.deleteByIdAndUserId(taskId, userId);
 	}
 	
 	@Override 
 	public void updateUserTask(Long userId, Long taskId, TaskDto taskDto) {
 		Tasks userTask = taskRepository.getByIdAndUserId(taskId, userId);
 		
+		if (userTask == null) {
+			throw new TaskNotFoundException(taskId);
+		}
 		userTask.setName(taskDto.getName());
 		
 		taskRepository.save(userTask);
@@ -93,5 +97,11 @@ public class TaskService implements Task {
 		}
 		
 		return tasks;
+	}
+	
+	private void validate(TaskDto task, List<ValidationRule<TaskDto>> createTaskRules) {
+		for (ValidationRule<TaskDto> taskRule : createTaskRules) {
+			taskRule.validate(task);
+		}
 	}
 }

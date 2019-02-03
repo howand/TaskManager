@@ -9,7 +9,7 @@ public interface Task {
 	
 	List<TaskDto> getUserTasks(Long userId);
 	
-	boolean deleteTask(Long userId, Long taskId);
+	void deleteTask(Long userId, Long taskId);
 	
 	TaskDto getUserTask(Long userId, Long taskId);
 	

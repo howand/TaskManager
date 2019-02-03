@@ -25,12 +25,8 @@ public class UserEndpoint {
 
 	@PostMapping
 	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-		
 		userDto = userService.createUser(userDto);
-		
-		ResponseEntity<UserDto> response = new ResponseEntity<>(userDto, HttpStatus.OK);
-	
-		return response;
+		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}
 	
 	@GetMapping
@@ -45,7 +41,7 @@ public class UserEndpoint {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-		userService.updateUser(id, userDto.getFirstName(), userDto.getLastName());
+		userService.updateUser(id, userDto);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }
