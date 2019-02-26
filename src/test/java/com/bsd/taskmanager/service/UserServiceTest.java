@@ -11,14 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.bsd.taskmanager.TaskManagerApplication;
 import com.bsd.taskmanager.entity.Users;
 import com.bsd.taskmanager.model.UserDto;
 import com.bsd.taskmanager.repository.UserRepository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = TaskManagerApplication.class)
 public class UserServiceTest {
 	

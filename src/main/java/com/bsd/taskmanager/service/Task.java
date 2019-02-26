@@ -5,7 +5,7 @@ import java.util.List;
 import com.bsd.taskmanager.model.TaskDto;
 
 public interface Task {
-	boolean createTask(Long userId, TaskDto task);
+	Long createTask(Long userId, TaskDto task);
 	
 	List<TaskDto> getUserTasks(Long userId);
 	

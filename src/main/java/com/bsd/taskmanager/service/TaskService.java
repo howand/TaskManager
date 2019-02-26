@@ -23,14 +23,14 @@ public class TaskService implements Task {
 	private UserService userService;
 	
 	@Override
-	public boolean createTask(Long userId, TaskDto taskDto) {
+	public Long createTask(Long userId, TaskDto taskDto) {
 		UserDto user = userService.getUser(userId);
 		
 		List<ValidationRule<TaskDto>> createTaskRules = TaskValidationFactory.getCreateTaskRules();
 		
 		validate(taskDto, createTaskRules);
 			
-		taskRepository.save(Tasks
+		Tasks task = taskRepository.save(Tasks
 				.builder()
 					.name(taskDto.getName())
 					.description(taskDto.getDescription())
@@ -43,7 +43,7 @@ public class TaskService implements Task {
 							.build())
 				.build());
 		
-		return true;
+		return task.getId();
 	}
 	
 	@Override
