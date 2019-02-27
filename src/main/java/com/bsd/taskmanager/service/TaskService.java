@@ -35,6 +35,7 @@ public class TaskService implements Task {
 					.name(taskDto.getName())
 					.description(taskDto.getDescription())
 					.dateTime(taskDto.getDateTime())
+					.status("pending")
 					.user(Users
 							.builder()
 								.id(user.getId())
@@ -83,6 +84,34 @@ public class TaskService implements Task {
 		userTask.setName(taskDto.getName());
 		
 		taskRepository.save(userTask);
+	}
+	
+	@Override
+	public List<TaskDto> getAllPendingTasks() {
+		List<Tasks> pendingTasks = taskRepository.getByStatus("pending");
+		List<TaskDto> tasks = new ArrayList<>();
+		
+		for (Tasks task : pendingTasks) {
+			tasks.add(TaskDto
+						.builder()
+							.dateTime(task.getDateTime())
+							.description(task.getDescription())
+							.id(task.getId())
+							.name(task.getName())
+							.status(task.getStatus())
+						.build());
+		}
+		
+		return tasks;
+	}
+	
+	@Override
+	public void markTaskAsDone(Long id) {
+		Tasks task = taskRepository.findById(id).get();
+		
+		task.setStatus("done");
+		
+		taskRepository.save(task);
 	}
 	
 	private List<TaskDto> getTaskList(List<Tasks> userTasks, List<TaskDto> tasks) {

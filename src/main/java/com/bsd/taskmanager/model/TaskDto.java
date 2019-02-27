@@ -20,6 +20,9 @@ public class TaskDto {
 	
 	@JsonProperty("description")
 	private String description;
+	
+	@JsonProperty("status")
+	private String status;
 
 	@JsonProperty("date_time")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

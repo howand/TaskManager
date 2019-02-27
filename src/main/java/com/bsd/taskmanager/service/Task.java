@@ -14,4 +14,8 @@ public interface Task {
 	TaskDto getUserTask(Long userId, Long taskId);
 	
 	void updateUserTask(Long userId, Long taskId, TaskDto taskDto);
+	
+	List<TaskDto> getAllPendingTasks();
+	
+	void markTaskAsDone(Long id);
 }

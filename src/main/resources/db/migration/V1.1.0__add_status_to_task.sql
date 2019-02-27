@@ -1,0 +1,1 @@
+ALTER TABLE TASKS ADD status VARCHAR(20) CHECK(status in ('pending', 'done'));

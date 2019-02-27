@@ -1,0 +1,18 @@
+CREATE SCHEMA taskmanager;
+
+CREATE TABLE users (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	username VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE tasks (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	description VARCHAR(500),
+	date_time DATETIME NOT NULL,
+	user_id BIGINT NOT NULL,
+	
+	FOREIGN KEY (user_id) REFERENCES users(id)
+);
