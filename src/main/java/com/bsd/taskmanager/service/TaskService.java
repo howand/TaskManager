@@ -122,6 +122,7 @@ public class TaskService implements Task {
 							.name(task.getName())
 							.description(task.getDescription())
 							.dateTime(task.getDateTime())
+							.status(task.getStatus())
 						.build());
 		}
 		

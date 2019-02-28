@@ -6,6 +6,7 @@ import java.util.List;
 import com.bsd.taskmanager.model.TaskDto;
 import com.bsd.taskmanager.service.validation.DateNotNull;
 import com.bsd.taskmanager.service.validation.TaskNameNotNullOrEmpty;
+import com.bsd.taskmanager.service.validation.TaskStatusPendingOrDone;
 
 public class TaskValidationFactory {
 	private static List<ValidationRule<TaskDto>> createTaskRules = new ArrayList<>();
@@ -18,6 +19,7 @@ public class TaskValidationFactory {
 		if (createTaskRules.isEmpty()) {
 			createTaskRules.add(new TaskNameNotNullOrEmpty());
 			createTaskRules.add(new DateNotNull());
+			createTaskRules.add(new TaskStatusPendingOrDone());
 		}
 		
 		return createTaskRules;

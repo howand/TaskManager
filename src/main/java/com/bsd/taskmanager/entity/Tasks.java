@@ -44,6 +44,7 @@ public class Tasks {
 	private LocalDateTime dateTime;
 	
 	@Column(name = "status")
+	@Size(max = 20)
 	private String status;
 	
 	@ManyToOne

@@ -1,4 +1,4 @@
-package com.bsd.taskmanager;
+package com.bsd.taskmanager.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,12 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.bsd.taskmanager.TaskManagerApplication;
 import com.bsd.taskmanager.entity.Tasks;
 import com.bsd.taskmanager.entity.Users;
 import com.bsd.taskmanager.model.TaskDto;
 import com.bsd.taskmanager.repository.TaskRepository;
 import com.bsd.taskmanager.repository.UserRepository;
-import com.bsd.taskmanager.service.TaskService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TaskManagerApplication.class)
@@ -61,6 +61,22 @@ public class TaskServiceTest {
 		Long id = taskService.createTask(user.getId(), task);
 		
 		assertNotNull(id);
+	}
+	
+	@Test
+	public void testStatusIsPendingForNewTask() {
+		TaskDto task = TaskDto
+							.builder()
+								.name("name")
+								.description("description")
+								.dateTime(LocalDateTime.MAX)
+							.build();
+		
+		Long id = taskService.createTask(user.getId(), task);
+		
+		Tasks result = taskRepository.findById(id).get();
+		
+		assertEquals("pending", result.getStatus());
 	}
 	
 	@Test

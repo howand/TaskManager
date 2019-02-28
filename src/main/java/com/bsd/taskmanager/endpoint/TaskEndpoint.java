@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bsd.taskmanager.model.TaskDto;
 import com.bsd.taskmanager.service.Task;
+import com.bsd.taskmanager.service.exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/user")
@@ -28,7 +29,11 @@ public class TaskEndpoint {
 	@PostMapping("/{id}/task")
 	public ResponseEntity<Void> createTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
 		
-		taskService.createTask(id, taskDto);
+		try {
+			taskService.createTask(id, taskDto);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
