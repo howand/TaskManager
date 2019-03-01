@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import com.bsd.taskmanager.constants.TaskStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,8 +46,7 @@ public class Tasks {
 	private LocalDateTime dateTime;
 	
 	@Column(name = "status")
-	@Size(max = 20)
-	private String status;
+	private TaskStatus status;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

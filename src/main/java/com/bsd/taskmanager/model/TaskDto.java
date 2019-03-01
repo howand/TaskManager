@@ -2,8 +2,10 @@ package com.bsd.taskmanager.model;
 
 import java.time.LocalDateTime;
 
+import com.bsd.taskmanager.constants.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +23,8 @@ public class TaskDto {
 	@JsonProperty("description")
 	private String description;
 	
-	@JsonProperty("status")
-	private String status;
+	@JsonProperty(access = Access.READ_ONLY, value = "status")
+	private TaskStatus status;
 
 	@JsonProperty("date_time")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

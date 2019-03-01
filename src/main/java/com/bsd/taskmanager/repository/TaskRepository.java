@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.bsd.taskmanager.constants.TaskStatus;
 import com.bsd.taskmanager.entity.Tasks;
 
 public interface TaskRepository extends JpaRepository<Tasks, Long> {
@@ -17,5 +18,5 @@ public interface TaskRepository extends JpaRepository<Tasks, Long> {
 	
 	List<Tasks> getByUserId(Long userId);
 	
-	List<Tasks> getByStatus(String status);
+	List<Tasks> getByStatus(TaskStatus status);
 }

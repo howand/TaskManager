@@ -23,6 +23,7 @@ public class TaskUpdater {
 			if (task.getDateTime().isBefore(LocalDateTime.now())) {
 				System.out.println(task.getId() + "|" + task.getName() + "|" + task.getStatus() + "|"
 						+ task.getDescription() + "|" + task.getDateTime());
+				
 				taskService.markTaskAsDone(task.getId());
 			}
 		}

@@ -1,5 +1,8 @@
 package com.bsd.taskmanager.service;
 
+import static com.bsd.taskmanager.constants.TaskStatus.PENDING;
+import static com.bsd.taskmanager.constants.TaskStatus.DONE;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class TaskService implements Task {
 					.name(taskDto.getName())
 					.description(taskDto.getDescription())
 					.dateTime(taskDto.getDateTime())
-					.status("pending")
+					.status(PENDING)
 					.user(Users
 							.builder()
 								.id(user.getId())
@@ -58,13 +61,17 @@ public class TaskService implements Task {
 	@Override
 	public TaskDto getUserTask(Long userId, Long taskId) {
 		Tasks userTask = taskRepository.getByIdAndUserId(taskId, userId);
-		TaskDto task = TaskDto
-							.builder()
-								.id(userTask.getId())
-								.name(userTask.getName())
-								.description(userTask.getDescription())
-								.dateTime(userTask.getDateTime())
-							.build();
+		TaskDto task = null;
+		
+		if (userTask != null) {
+			task = TaskDto
+					.builder()
+						.id(userTask.getId())
+						.name(userTask.getName())
+						.description(userTask.getDescription())
+						.dateTime(userTask.getDateTime())
+					.build();
+		}
 		
 		return task;
 	}
@@ -88,7 +95,7 @@ public class TaskService implements Task {
 	
 	@Override
 	public List<TaskDto> getAllPendingTasks() {
-		List<Tasks> pendingTasks = taskRepository.getByStatus("pending");
+		List<Tasks> pendingTasks = taskRepository.getByStatus(PENDING);
 		List<TaskDto> tasks = new ArrayList<>();
 		
 		for (Tasks task : pendingTasks) {
@@ -109,7 +116,7 @@ public class TaskService implements Task {
 	public void markTaskAsDone(Long id) {
 		Tasks task = taskRepository.findById(id).get();
 		
-		task.setStatus("done");
+		task.setStatus(DONE);
 		
 		taskRepository.save(task);
 	}
