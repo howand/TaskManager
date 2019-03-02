@@ -1,7 +1,7 @@
 package com.bsd.taskmanager.service;
 
-import static com.bsd.taskmanager.constants.TaskStatus.PENDING;
 import static com.bsd.taskmanager.constants.TaskStatus.DONE;
+import static com.bsd.taskmanager.constants.TaskStatus.PENDING;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +70,7 @@ public class TaskService implements Task {
 						.name(userTask.getName())
 						.description(userTask.getDescription())
 						.dateTime(userTask.getDateTime())
+						.status(userTask.getStatus())
 					.build();
 		}
 		

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bsd.taskmanager.model.UserDto;
 import com.bsd.taskmanager.service.User;
+import com.bsd.taskmanager.service.exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/user")
@@ -24,9 +25,9 @@ public class UserEndpoint {
 	private User userService;
 
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-		userDto = userService.createUser(userDto);
-		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+		user = userService.createUser(user);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
 	@GetMapping
@@ -36,12 +37,26 @@ public class UserEndpoint {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-		return new ResponseEntity<UserDto>(userService.getUser(id), HttpStatus.OK);
+		UserDto user = null;
+
+		try {
+			user = userService.getUser(id);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<UserDto>(user, HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-		userService.updateUser(id, userDto);
+	public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+		
+		try {
+			userService.updateUser(id, user);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }

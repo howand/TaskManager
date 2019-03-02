@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.bsd.taskmanager.TaskManagerApplication;
+import com.bsd.taskmanager.constants.TaskStatus;
 import com.bsd.taskmanager.entity.Tasks;
 import com.bsd.taskmanager.entity.Users;
 import com.bsd.taskmanager.model.TaskDto;
@@ -76,7 +77,7 @@ public class TaskServiceTest {
 		
 		Tasks result = taskRepository.findById(id).get();
 		
-		assertEquals("pending", result.getStatus());
+		assertEquals(TaskStatus.PENDING, result.getStatus());
 	}
 	
 	@Test

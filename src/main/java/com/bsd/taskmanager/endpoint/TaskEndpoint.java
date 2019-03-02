@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bsd.taskmanager.model.TaskDto;
 import com.bsd.taskmanager.service.Task;
+import com.bsd.taskmanager.service.exception.TaskNotFoundException;
 import com.bsd.taskmanager.service.exception.UserNotFoundException;
 
 @RestController
@@ -27,19 +28,24 @@ public class TaskEndpoint {
 
 	
 	@PostMapping("/{id}/task")
-	public ResponseEntity<Void> createTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+	public ResponseEntity<Void> createTask(@PathVariable Long id, @RequestBody TaskDto task) {
 		
 		try {
-			taskService.createTask(id, taskDto);
+			taskService.createTask(id, task);
 		} catch (UserNotFoundException e) {
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}/task/{task_id}")
-	public ResponseEntity<Void> updateUserTask(@PathVariable("id") Long userId, @PathVariable("task_id") Long taskId, @RequestBody TaskDto taskDto) {
-		taskService.updateUserTask(userId, taskId, taskDto);
+	public ResponseEntity<Void> updateUserTask(@PathVariable("id") Long userId, @PathVariable("task_id") Long taskId, @RequestBody TaskDto task) {
+		
+		try {
+			taskService.updateUserTask(userId, taskId, task);
+		} catch (TaskNotFoundException e) {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
